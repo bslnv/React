@@ -1,10 +1,10 @@
 import React from 'react';
 import FishCard from './FishCard';
 
-function FishingLog({ title, caughtFishes, onClearFish }) { 
+function FishingLog({ title, caughtFishes, onClearFish }) {
   if (!caughtFishes || caughtFishes.length === 0) {
     return (
-      <div style={{ border: '1px solid #4CAF50', padding: '15px', margin: '15px', borderRadius: '5px', backgroundColor: '#e8f5e9' }}>
+      <div style={{ border: '1px solid #4CAF50', padding: '15px', margin: '15px', borderRadius: '5px', backgroundColor: '#e8f5e9', minHeight: '100px'}}>
         <h3>{title}</h3>
         <p>Ще нічого не спіймано!</p>
       </div>
@@ -18,18 +18,20 @@ function FishingLog({ title, caughtFishes, onClearFish }) {
         {caughtFishes.map((fish) => (
           <div key={fish.id} style={{ position: 'relative' }}>
             <FishCard
+              id={fish.id} 
               name={fish.name}
               size={fish.size}
               rarity={fish.rarity}
               imageUrl={fish.imageUrl}
+              notes={fish.notes} 
             />
             {onClearFish && (
                <button
                 onClick={() => onClearFish(fish.id)}
                 style={{
                   position: 'absolute',
-                  top: '5px',
-                  right: '5px',
+                  top: '15px', 
+                  right: '15px', 
                   cursor: 'pointer',
                   background: 'rgba(255,0,0,0.6)',
                   color: 'white',
@@ -40,7 +42,8 @@ function FishingLog({ title, caughtFishes, onClearFish }) {
                   lineHeight: '20px',
                   textAlign: 'center',
                   padding: '0',
-                  fontSize: '12px'
+                  fontSize: '12px',
+                  zIndex: 1 
                 }}
                 title="Випустити рибу"
               >
