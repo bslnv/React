@@ -1,0 +1,27 @@
+{
+  "fishingSpots": [
+    {
+      "id": "spot_alpha",
+      "spotName": "Озеро Спокою",
+      "environmentDescription": "Тихе озеро, оточене густим лісом. Завантажено з JSON.",
+      "maxLogCapacity": 6,
+      "customFishTypes": [
+        { "idPrefix": "lake_carp", "name": "Озерний Короп", "size": "Середній", "rarity": "Звичайна", "imageUrl": "https://placehold.co/100x80/A52A2A/FFFFFF?text=LakeCarp" },
+        { "idPrefix": "lake_perch", "name": "Окунь-Смугастик", "size": "Маленький", "rarity": "Звичайна", "imageUrl": "https://placehold.co/100x80/2E8B57/FFFFFF?text=LakePerch" }
+      ]
+    },
+    {
+      "id": "spot_beta",
+      "spotName": "Бурхлива Річка",
+      "environmentDescription": "Стрімка гірська річка з кам'янистим дном. Завантажено з JSON.",
+      "maxLogCapacity": 4,
+      "customFishTypes": [
+        { "idPrefix": "river_trout", "name": "Річкова Форель", "size": "Середня", "rarity": "Рідкісна", "imageUrl": "https://placehold.co/100x80/4682B4/FFFFFF?text=RiverTrout", "notes": "Дуже спритна!"},
+        { "idPrefix": "river_grayling", "name": "Харіус Річковий", "size": "Середній", "rarity": "Епічна", "imageUrl": "https://placehold.co/100x80/8A2BE2/FFFFFF?text=Grayling", "notes": "Прекрасний плавець!"}
+      ]
+    }
+  ],
+  "fallbackFishTypes": [
+     { "idPrefix": "generic_roach", "name": "Плітка Звичайна", "size": "Маленька", "rarity": "Звичайна", "imageUrl": "https://placehold.co/100x80/シルバー/000000?text=Roach" }
+  ]
+}
