@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react'; 
+import React, { useState, useEffect, useRef } from 'react';
 import FishingSpot from './components/FishingSpot';
 import './App.css';
 
@@ -7,11 +7,11 @@ function App() {
   const [fallbackFish, setFallbackFish] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [playerName, setPlayerName] = useState("Рибак"); 
-  const playerNameInputRef = useRef(null); 
+  const [playerName, setPlayerName] = useState("Рибак");
+  const playerNameInputRef = useRef(null);
 
   useEffect(() => {
-    fetch('/data/gameConfig.json') 
+    fetch('/data/gameConfig.json')
       .then(response => {
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
@@ -27,7 +27,7 @@ function App() {
         console.error("Помилка завантаження конфігурації гри:", err);
         setError(err.message);
         setLoading(false);
-        setSpots([ 
+        setSpots([
           { id: "default_spot1", spotName: "Тихий Затон (дефолт)", environmentDescription: "Місце за замовчуванням.", maxLogCapacity: 5, customFishTypes: [] },
         ]);
       });
@@ -35,7 +35,7 @@ function App() {
 
   useEffect(() => {
     playerNameInputRef.current?.focus();
-  }, []); 
+  }, []);
 
   if (loading) {
     return <div style={{textAlign: 'center', marginTop: '50px', fontSize: '20px'}}>Завантаження місць для риболовлі...</div>;
@@ -52,7 +52,7 @@ function App() {
         <div style={{ marginTop: '10px' }}>
           <label htmlFor="playerName" style={{ marginRight: '10px' }}>Змінити ім'я:</label>
           <input
-            ref={playerNameInputRef} 
+            ref={playerNameInputRef}
             type="text"
             id="playerName"
             value={playerName}
@@ -73,7 +73,7 @@ function App() {
             />
           ))
         ) : (
-          <p>На жаль, місця для риболовлі не завантажились. Спробуйте пізніше.</p>
+          !loading && <p>На жаль, місця для риболовлі не завантажились або їх немає. Спробуйте пізніше.</p>
         )}
       </main>
       <footer style={{ textAlign: 'center', padding: '10px', marginTop: '20px', borderTop: '1px solid #eee'}}>
