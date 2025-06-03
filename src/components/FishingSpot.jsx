@@ -1,5 +1,6 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react'; 
 import FishingLog from './FishingLog';
+import { useLocalStorage } from '../hooks/useLocalStorage'; 
 
 const availableFishTypes = [
   { idPrefix: 'carp', name: 'Короп', size: 'Середній', rarity: 'Звичайна', imageUrl: 'https://placehold.co/100x80/FFD700/000000?text=Carp' },
@@ -11,21 +12,38 @@ const availableFishTypes = [
 
 let fishIdCounter = 0;
 
-function FishingSpot({ spotName, environmentDescription, maxLogCapacity = 5 }) {
-  const [caughtFishLog, setCaughtFishLog] = useState([]);
+function FishingSpot({ spotName, environmentDescription, maxLogCapacity = 5, initialFishTypes = availableFishTypes }) { 
+  const [caughtFishLog, setCaughtFishLog] = useLocalStorage(`caughtFishLog-${spotName}`, []);
+
+  useEffect(() => {
+    if (caughtFishLog.length > 0) {
+        const maxIdNum = caughtFishLog.reduce((max, fish) => {
+            const numPart = parseInt(fish.id.split('_').pop(), 10);
+            return isNaN(numPart) ? max : Math.max(max, numPart);
+        }, -1);
+        fishIdCounter = maxIdNum + 1;
+    } else {
+        fishIdCounter = 0;
+    }
+  }, []); 
+
   const [statusMessage, setStatusMessage] = useState('Готові до риболовлі!');
-  const [isFull, setIsFull] = useState(false); 
+  const [isFull, setIsFull] = useState(caughtFishLog.length >= maxLogCapacity);
+
+  useEffect(() => {
+    setIsFull(caughtFishLog.length >= maxLogCapacity);
+  }, [caughtFishLog, maxLogCapacity]);
+
 
   const handleCatchFish = () => {
     if (caughtFishLog.length >= maxLogCapacity) {
       setStatusMessage(`Журнал повний! Максимум ${maxLogCapacity} риб.`);
-      setIsFull(true); 
       return;
     }
-    setIsFull(false); 
 
-    const randomIndex = Math.floor(Math.random() * availableFishTypes.length);
-    const caughtType = availableFishTypes[randomIndex];
+    const fishToCatchFrom = initialFishTypes || availableFishTypes; 
+    const randomIndex = Math.floor(Math.random() * fishToCatchFrom.length);
+    const caughtType = fishToCatchFrom[randomIndex];
 
     if (!caughtType.name) {
         setStatusMessage("Щось дивне зірвалося з гачка...");
@@ -41,24 +59,18 @@ function FishingSpot({ spotName, environmentDescription, maxLogCapacity = 5 }) {
     setStatusMessage(`Спіймано: ${newFish.name}!`);
   };
 
-  const handleClearFishById = useCallback((fishIdToRemove) => {
-    setCaughtFishLog(prevLog => {
-      const newLog = prevLog.filter(fish => fish.id !== fishIdToRemove);
-      if (newLog.length < maxLogCapacity) {
-        setIsFull(false); 
-      }
-      return newLog;
-    });
+   const handleClearFishById = useCallback((fishIdToRemove) => {
+    setCaughtFishLog(prevLog => prevLog.filter(fish => fish.id !== fishIdToRemove));
     setStatusMessage(`Рибу з ID ${fishIdToRemove.substring(0,4)}... випущено.`);
-  }, [maxLogCapacity]); 
+  }, [setCaughtFishLog]); 
 
   const handleClearAllFish = useCallback(() => {
     setCaughtFishLog([]);
     setStatusMessage('Весь улов випущено.');
-    setIsFull(false); 
-  }, []);
+    fishIdCounter = 0; 
+  }, [setCaughtFishLog]);
 
-  return (
+   return (
     <div style={{ border: '2px dashed #2196F3', padding: '20px', margin: '20px auto', borderRadius: '8px', maxWidth: '700px', backgroundColor: '#e3f2fd' }}>
       <h2>Ласкаво просимо до: {spotName}</h2>
       <p><em>{environmentDescription}</em></p>
@@ -94,5 +106,4 @@ function FishingSpot({ spotName, environmentDescription, maxLogCapacity = 5 }) {
     </div>
   );
 }
-
 export default FishingSpot;
