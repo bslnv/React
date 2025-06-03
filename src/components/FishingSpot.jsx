@@ -3,7 +3,7 @@ import FishingLog from './FishingLog';
 import { useLocalStorage } from '../hooks/useLocalStorage';
 
 const availableFishTypes = [ ];
-let fishIdCounter = 0; 
+let fishIdCounter = 0;
 
 function FishingSpot({ spotName, environmentDescription, maxLogCapacity = 5, initialFishTypes = availableFishTypes, notify }) {
   const [caughtFishLog, setCaughtFishLog] = useLocalStorage(`caughtFishLog-${spotName}`, []);
@@ -25,7 +25,7 @@ function FishingSpot({ spotName, environmentDescription, maxLogCapacity = 5, ini
   useEffect(() => {
     const full = caughtFishLog.length >= maxLogCapacity;
     setIsFull(full);
-    if (full && notify) { 
+    if (full && notify && caughtFishLog.length > 0) {
       notify(`Журнал для "${spotName}" повний!`, 'warning');
     }
   }, [caughtFishLog, maxLogCapacity, spotName, notify]);
@@ -38,27 +38,33 @@ function FishingSpot({ spotName, environmentDescription, maxLogCapacity = 5, ini
     }
 
     const fishToCatchFrom = initialFishTypes.length > 0 ? initialFishTypes : availableFishTypes;
+    if (fishToCatchFrom.length === 0) {
+        setStatusMessage("Немає доступних типів риб для цього місця.");
+        if (notify) notify("Немає доступних типів риб для цього місця.", 'warning');
+        return;
+    }
     const randomIndex = Math.floor(Math.random() * fishToCatchFrom.length);
     const caughtType = fishToCatchFrom[randomIndex];
 
-    if (!caughtType.name) {
+    if (!caughtType || !caughtType.name) {
         setStatusMessage("Щось дивне зірвалося з гачка...");
         if (notify) notify("Невдача! Риба зірвалася.", 'error');
         return;
     }
 
     const newFish = {
-      ...caughtType, 
-      id: `<span class="math-inline">\{caughtType\.idPrefix\}\_</span>{fishIdCounter++}`,
+      ...caughtType,
+      id: `${caughtType.idPrefix}_${fishIdCounter++}`,
     };
 
     setCaughtFishLog(prevLog => [...prevLog, newFish]);
     const catchMsg = `Спіймано: ${newFish.name}!`;
     setStatusMessage(catchMsg);
-    if (notify) { 
+    if (notify) {
       let type = 'info';
       if (newFish.rarity === 'Епічна' || newFish.rarity === 'Легендарна') type = 'success';
-      notify(`<span class="math-inline">\{catchMsg\} \(</span>{newFish.rarity})`, type);
+      const notificationMessage = `${catchMsg} (${newFish.rarity})`;
+      notify(notificationMessage, type);
     }
   };
 
@@ -83,7 +89,7 @@ function FishingSpot({ spotName, environmentDescription, maxLogCapacity = 5, ini
       <p><em>{environmentDescription}</em></p>
       <p style={{fontWeight: 'bold'}}>Статус: <span style={{color: isFull ? 'red' : 'green'}}>{statusMessage}</span></p>
 
-      {isFull && ! (caughtFishLog.length === 0) && ( 
+      {isFull && caughtFishLog.length > 0 && ( 
         <p style={{ color: 'darkred', backgroundColor: 'pink', padding: '5px', borderRadius: '3px' }}>
           <strong>Увага:</strong> Журнал заповнено! Більше риби не поміститься. Очистіть місце.
         </p>
@@ -91,7 +97,7 @@ function FishingSpot({ spotName, environmentDescription, maxLogCapacity = 5, ini
 
       <button
         onClick={handleCatchFish}
-        disabled={isFull} 
+        disabled={isFull}
         style={{ padding: '10px 15px', marginRight: '10px', backgroundColor: '#4CAF50', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer', opacity: isFull ? 0.5 : 1 }}
       >
         Закинути вудку! 🎣
