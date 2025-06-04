@@ -1,14 +1,16 @@
-import React, { useState, useCallback, useEffect } from 'react';
+import React, { useState, useCallback, useEffect, Suspense, lazy } from 'react';
 import FishingLog from './FishingLog';
 import { useLocalStorage } from '../hooks/useLocalStorage';
 
-const availableFishTypes = [ ];
+const FishEncyclopedia = lazy(() => import('./FishEncyclopedia'));
+
 let fishIdCounter = 0;
 
-function FishingSpot({ spotName, environmentDescription, maxLogCapacity = 5, initialFishTypes = availableFishTypes, notify }) {
+function FishingSpot({ spotName, environmentDescription, maxLogCapacity = 5, initialFishTypes = [], notify }) {
   const [caughtFishLog, setCaughtFishLog] = useLocalStorage(`caughtFishLog-${spotName}`, []);
   const [statusMessage, setStatusMessage] = useState('Готові до риболовлі!');
   const [isFull, setIsFull] = useState(caughtFishLog.length >= maxLogCapacity);
+  const [showEncyclopedia, setShowEncyclopedia] = useState(false);
 
   useEffect(() => {
     if (caughtFishLog.length > 0) {
@@ -30,14 +32,13 @@ function FishingSpot({ spotName, environmentDescription, maxLogCapacity = 5, ini
     }
   }, [caughtFishLog, maxLogCapacity, spotName, notify]);
 
-
   const handleCatchFish = () => {
     if (isFull) {
       setStatusMessage(`Журнал повний! Максимум ${maxLogCapacity} риб.`);
       return;
     }
 
-    const fishToCatchFrom = initialFishTypes.length > 0 ? initialFishTypes : availableFishTypes;
+    const fishToCatchFrom = initialFishTypes.length > 0 ? initialFishTypes : [];
     if (fishToCatchFrom.length === 0) {
         setStatusMessage("Немає доступних типів риб для цього місця.");
         if (notify) notify("Немає доступних типів риб для цього місця.", 'warning');
@@ -83,13 +84,17 @@ function FishingSpot({ spotName, environmentDescription, maxLogCapacity = 5, ini
     if (notify) notify(`Весь улов з "${spotName}" випущено.`, 'info');
   }, [setCaughtFishLog, notify, spotName]);
 
+  const toggleEncyclopedia = () => {
+    setShowEncyclopedia(prev => !prev);
+  };
+
   return (
     <div style={{ border: '2px dashed #2196F3', padding: '20px', margin: '20px auto', borderRadius: '8px', maxWidth: '700px', backgroundColor: '#e3f2fd' }}>
       <h2>Ласкаво просимо до: {spotName}</h2>
       <p><em>{environmentDescription}</em></p>
       <p style={{fontWeight: 'bold'}}>Статус: <span style={{color: isFull ? 'red' : 'green'}}>{statusMessage}</span></p>
 
-      {isFull && caughtFishLog.length > 0 && ( 
+      {isFull && caughtFishLog.length > 0 && (
         <p style={{ color: 'darkred', backgroundColor: 'pink', padding: '5px', borderRadius: '3px' }}>
           <strong>Увага:</strong> Журнал заповнено! Більше риби не поміститься. Очистіть місце.
         </p>
@@ -116,7 +121,18 @@ function FishingSpot({ spotName, environmentDescription, maxLogCapacity = 5, ini
         onClearFish={handleClearFishById}
       />
       <p>Заповненість журналу: {caughtFishLog.length} / {maxLogCapacity}</p>
+
+      <button onClick={toggleEncyclopedia} style={{ marginTop: '15px', padding: '8px 12px', backgroundColor: '#007bff', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }}>
+        {showEncyclopedia ? 'Сховати' : 'Показати'} Енциклопедію Риб
+      </button>
+
+      {showEncyclopedia && (
+        <Suspense fallback={<div style={{marginTop: '10px', color: 'orange', fontWeight: 'bold'}}>Завантаження енциклопедії...</div>}>
+          <FishEncyclopedia />
+        </Suspense>
+      )}
     </div>
   );
 }
+
 export default FishingSpot;
