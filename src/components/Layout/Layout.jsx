@@ -1,7 +1,16 @@
-import React from 'react';
-import { Outlet, Link } from 'react-router-dom';
+import React, { useContext, useRef, useEffect } from 'react';
+import { Outlet, NavLink } from 'react-router-dom';
+import { AppContext } from '../../context/AppContext';
 
-const Layout = ({ theme, toggleTheme, playerName, setPlayerName, playerNameInputRef }) => {
+const Layout = () => {
+  const { theme, toggleTheme, playerName, setPlayerName } = useContext(AppContext);
+  const playerNameInputRef = useRef(null);
+
+  useEffect(() => {
+    if (playerNameInputRef.current && document.activeElement !== playerNameInputRef.current) {
+    }
+  }, []);
+
   const navStyle = {
     display: 'flex',
     justifyContent: 'center',
@@ -10,13 +19,14 @@ const Layout = ({ theme, toggleTheme, playerName, setPlayerName, playerNameInput
     padding: '10px',
   };
 
-  const linkStyle = {
-    color: 'var(--link-color)',
+  const getLinkStyle = ({ isActive }) => ({
+    color: isActive ? 'var(--button-primary-bg)' : 'var(--link-color)',
     textDecoration: 'none',
     fontWeight: 'bold',
     padding: '5px 10px',
     borderRadius: '4px',
-  };
+    transition: 'color 0.2s ease-in-out',
+  });
 
   return (
     <>
@@ -39,8 +49,8 @@ const Layout = ({ theme, toggleTheme, playerName, setPlayerName, playerNameInput
           Змінити тему (Зараз: {theme === 'light' ? 'Світла ☀️' : 'Темна 🌙'})
         </button>
         <nav style={navStyle}>
-          <Link to="/" style={linkStyle}>Головна</Link>
-          <Link to="/about" style={linkStyle}>Про гру</Link>
+          <NavLink to="/" style={getLinkStyle}>Головна</NavLink>
+          <NavLink to="/about" style={getLinkStyle}>Про гру</NavLink>
         </nav>
       </header>
 

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Routes, Route } from 'react-router-dom';
 import Layout from './components/Layout/Layout';
 import HomePage from './pages/HomePage';
@@ -11,26 +11,11 @@ function App() {
   const [fallbackFish, setFallbackFish] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [playerName, setPlayerName] = useState("Рибак");
-  const playerNameInputRef = useRef(null);
-  const [theme, setTheme] = useState(() => {
-    const savedTheme = localStorage.getItem('theme');
-    return savedTheme ? savedTheme : 'light';
-  });
   const { addNotification, NotificationContainer } = useNotification();
 
   useEffect(() => {
-    document.body.setAttribute('data-theme', theme);
-    localStorage.setItem('theme', theme);
-  }, [theme]);
+    let initialLoadNotified = sessionStorage.getItem('initialConfigNotified') === 'true';
 
-  const toggleTheme = () => {
-    const newTheme = theme === 'light' ? 'dark' : 'light';
-    setTheme(newTheme);
-    addNotification(`Тему змінено на ${newTheme === 'light' ? 'світлу' : 'темну'}`, 'info', 2000);
-  };
-
-  useEffect(() => {
     fetch('/data/gameConfig.json')
       .then(response => {
         if (!response.ok) {
@@ -42,9 +27,9 @@ function App() {
         setSpots(data.fishingSpots || []);
         setFallbackFish(data.fallbackFishTypes || []);
         setLoading(false);
-        if (theme === 'light' && !localStorage.getItem('initialConfigLoaded')) {
+        if (!initialLoadNotified) {
              addNotification('Конфігурація гри успішно завантажена!', 'success');
-             localStorage.setItem('initialConfigLoaded', 'true'); // Щоб не показувати при кожній зміні теми
+             sessionStorage.setItem('initialConfigNotified', 'true');
         }
       })
       .catch(err => {
@@ -56,15 +41,8 @@ function App() {
         ]);
         addNotification(`Помилка завантаження: ${err.message}`, 'error', 5000);
       });
-  }, [addNotification, theme]);
-
-  useEffect(() => {
-    if (playerNameInputRef.current && document.activeElement !== playerNameInputRef.current) {
-        // Фокусуємо, тільки якщо інпут не активний, щоб не перебивати ввід користувача
-        // playerNameInputRef.current.focus(); // Можна тимчасово закоментувати, якщо заважає
-    }
-  }, []);
-
+  }, [addNotification]);
+  
   const loadingErrorStyle = {
     textAlign: 'center', 
     marginTop: '50px', 
@@ -85,7 +63,7 @@ function App() {
     return (
       <div className="App">
         <NotificationContainer />
-        <div style={{...loadingErrorStyle, color: 'red'}}>Помилка: {error}. Спробуйте перезавантажити.</div>
+        <div style={{...loadingErrorStyle, color: 'var(--notification-error-border)'}}>Помилка: {error}. Спробуйте перезавантажити.</div>
       </div>
     );
   }
@@ -96,15 +74,7 @@ function App() {
       <Routes>
         <Route 
           path="/" 
-          element={
-            <Layout 
-              theme={theme} 
-              toggleTheme={toggleTheme}
-              playerName={playerName}
-              setPlayerName={setPlayerName}
-              playerNameInputRef={playerNameInputRef}
-            />
-          }
+          element={<Layout />}
         >
           <Route 
             index 
@@ -117,10 +87,6 @@ function App() {
             } 
           />
           <Route path="about" element={<AboutPage />} />
-          {/* Тут можна буде додати інші маршрути, наприклад, для Fishdex */}
-          {/* <Route path="fishdex" element={<FishdexPage />} /> */}
-          {/* Можна додати маршрут для 404 Not Found */}
-          {/* <Route path="*" element={<NotFoundPage />} /> */}
         </Route>
       </Routes>
     </div>

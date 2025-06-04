@@ -1,9 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import ReactDOM from 'react-dom';
-import Notification from './Notification';
+import Notification from './Notification'; 
 import './NotificationPortal.css';
 
-const notificationPortalRoot = document.getElementById('notification-portal');
 
 let notificationIdCounter = 0;
 
@@ -12,18 +10,21 @@ export const useNotification = () => {
 
   const addNotification = useCallback((message, type = 'info', duration = 3000) => {
     const id = notificationIdCounter++;
-    setNotifications(prev => [...prev, { id, message, type, duration }]);
+    setNotifications(prevNotifications => [...prevNotifications, { id, message, type, duration }]);
   }, []);
 
   const removeNotification = useCallback((idToRemove) => {
-    setNotifications(prev => prev.filter(n => n.id !== idToRemove));
+    setNotifications(prevNotifications => prevNotifications.filter(n => n.id !== idToRemove));
   }, []);
 
-  const NotificationContainer = () => (
-    ReactDOM.createPortal(
-      <div className="notification-container">
+  const NotificationContainer = () => {
+    if (notifications.length === 0) {
+      return null;
+    }
+    return (
+      <div className="notification-container-inline">
         {notifications.map(n => (
-          <Notification
+          <Notification 
             key={n.id}
             message={n.message}
             type={n.type}
@@ -31,9 +32,8 @@ export const useNotification = () => {
             onClose={() => removeNotification(n.id)}
           />
         ))}
-      </div>,
-      notificationPortalRoot
-    )
-  );
+      </div>
+    );
+  };
   return { addNotification, NotificationContainer };
 };
