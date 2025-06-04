@@ -1,12 +1,12 @@
-# React + Vite
+# Симулятор Риболовлі (React)
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Тема проєкту - розробити симулятор риболовлі з різними механіками, статистикою та елементами кар'єри.
 
-Currently, two official plugins are available:
+### Скріншоти:
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+![1](screenshots/Screenshot_1.png)
+![2](screenshots/Screenshot_2.png)
+![3](screenshots/Screenshot_3.png)
+![4](screenshots/Screenshot_4.png)
+![5](screenshots/Screenshot_5.png)
+![6](screenshots/Screenshot_6.png)
