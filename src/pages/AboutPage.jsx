@@ -6,7 +6,7 @@ const AboutPage = () => {
     color: 'var(--text-color)',
     borderRadius: '8px',
     textAlign: 'left',
-    maxWidth: '800px',
+    maxWidth: '800px',  
     margin: '0 auto'
   };
   const headingStyle = {
