@@ -1,0 +1,114 @@
+.fishing-spot-wrapper {
+  background-color: var(--fishing-spot-bg);
+  border: 2px dashed var(--fishing-spot-border);
+  color: var(--text-color);
+  padding: 20px;
+  margin: 20px auto;
+  border-radius: 8px;
+  max-width: 700px;
+  transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+}
+
+.fishing-spot-wrapper h2 {
+  color: var(--text-color);
+  margin-top: 0;
+  margin-bottom: 15px;
+}
+
+.fishing-spot-wrapper p {
+  margin-bottom: 10px;
+  line-height: 1.5;
+}
+
+.fishing-spot-wrapper em {
+  opacity: 0.9;
+}
+
+.fishing-spot-wrapper .status-text {
+  font-weight: bold;
+  margin-bottom: 15px !important;
+}
+
+.fishing-spot-wrapper .status-value-full {
+  color: var(--button-danger-bg); 
+}
+
+.fishing-spot-wrapper .status-value-ready {
+  color: var(--button-primary-bg); 
+}
+
+.fishing-spot-wrapper .log-full-warning {
+  color: var(--button-danger-text);
+  background-color: var(--button-danger-bg);
+  padding: 8px 12px;
+  border-radius: 4px;
+  margin-top: 10px;
+  margin-bottom: 15px;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.fishing-spot-wrapper .log-full-warning strong {
+  color: var(--button-danger-text);
+}
+
+.fishing-spot-wrapper .action-buttons button {
+  padding: 10px 15px;
+  margin-right: 10px;
+  color: var(--button-primary-text);
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.3s ease, opacity 0.3s ease;
+}
+.fishing-spot-wrapper .action-buttons button:last-child {
+  margin-right: 0;
+}
+
+.fishing-spot-wrapper .action-buttons button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.fishing-spot-wrapper .btn-cast {
+  background-color: var(--button-primary-bg);
+}
+.fishing-spot-wrapper .btn-cast:hover:not(:disabled) {
+  opacity: 0.85;
+}
+
+.fishing-spot-wrapper .btn-clear-all {
+  background-color: var(--button-danger-bg);
+}
+.fishing-spot-wrapper .btn-clear-all:hover:not(:disabled) {
+  opacity: 0.85;
+}
+
+.fishing-spot-wrapper .btn-toggle-encyclopedia {
+  background-color: var(--app-header-bg);
+  color: var(--app-header-text);
+  margin-top: 20px;
+  padding: 8px 15px;
+  display: block; 
+  margin-left: auto;
+  margin-right: auto;
+  min-width: 200px;
+  border-radius: 4px;
+  border: none;
+  font-weight: bold;
+  transition: background-color 0.3s ease, color 0.3s ease, opacity 0.3s ease;
+}
+.fishing-spot-wrapper .btn-toggle-encyclopedia:hover:not(:disabled) {
+  opacity: 0.85;
+}
+
+.encyclopedia-fallback {
+  margin-top: 15px;
+  color: var(--text-color);
+  font-weight: bold;
+  opacity: 0.8;
+  padding: 10px;
+  background-color: var(--app-bg);
+  border: 1px dashed var(--text-color);
+  border-radius: 4px;
+}

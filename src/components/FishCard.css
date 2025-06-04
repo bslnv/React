@@ -1,0 +1,76 @@
+.fish-card-wrapper {
+  margin: 10px;
+  padding: 10px;
+  width: 200px;
+  min-height: 220px; 
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  background-color: var(--fish-card-bg);
+  color: var(--text-color);
+  position: relative;
+  border-style: solid;
+  border-width: 2px;
+  border-radius: 5px;
+  transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+}
+
+.fish-card-wrapper h4,
+.fish-card-wrapper p {
+  color: var(--text-color);
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+
+.fish-card-wrapper h4 {
+  font-size: 1.1em;
+  word-break: break-word;
+}
+
+.fish-card-wrapper small {
+  color: var(--text-color);
+  opacity: 0.8;
+  display: block; 
+  font-size: 0.8em;
+}
+
+.fish-card-wrapper .special-badge {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  font-size: 0.75em;
+  font-weight: bold;
+  padding: 2px 4px;
+  border-radius: 3px;
+}
+
+.fish-card-wrapper .fish-image {
+  width: 80px;
+  height: 60px;
+  object-fit: contain;
+  margin-top: 5px;
+  border-radius: 4px;
+}
+
+.fish-card-wrapper .no-image-text {
+  font-size: 10px;
+  color: var(--text-color);
+  opacity: 0.6;
+  margin: 10px 0;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.fish-card-wrapper .fish-notes {
+  font-size: 12px;
+  font-style: italic;
+  margin-top: auto;
+  color: var(--text-color);
+  opacity: 0.9;
+  width: 100%;
+  padding-top: 5px;
+}

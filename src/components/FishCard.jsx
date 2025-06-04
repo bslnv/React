@@ -1,52 +1,43 @@
 import React from 'react';
+import './FishCard.css';
 
 function FishCard({ id, name, size, rarity, imageUrl, notes }) {
   if (!name || !id) {
     return null;
   }
 
-  let borderColor = 'grey';
+  let borderColorVar = 'var(--rarity-common-border)';
+  let specialBadgeStyle = {};
   let rarityText = rarity;
-  let specialBadge = null;
 
   if (rarity === 'Рідкісна') {
-    borderColor = 'blue';
+    borderColorVar = 'var(--rarity-rare-border)';
   } else if (rarity === 'Епічна') {
-    borderColor = 'purple';
+    borderColorVar = 'var(--rarity-epic-border)';
+    specialBadgeStyle = { color: 'var(--rarity-epic-border)', fontWeight: 'bold' };
     rarityText = `${rarity} ✨`;
-    specialBadge = <span style={{ color: 'purple', fontWeight: 'bold' }}>Епік!</span>;
   } else if (rarity === 'Легендарна') {
-    borderColor = 'gold';
+    borderColorVar = 'var(--rarity-legendary-border)';
+    specialBadgeStyle = { color: 'var(--rarity-legendary-border)', fontWeight: 'bold' };
     rarityText = `${rarity} 🌟`;
-    specialBadge = <span style={{ color: 'gold', fontWeight: 'bold' }}>Легенда!</span>;
   }
 
   return (
-    <div style={{
-      border: `2px solid ${borderColor}`,
-      margin: '10px',
-      padding: '10px',
-      width: '200px',
-      minHeight: '220px',
-      boxSizing: 'border-box',
-      display: 'flex',
-      flexDirection: 'column',
-      alignItems: 'center',
-      textAlign: 'center',
-      backgroundColor: '#f9f9f9',
-      position: 'relative'
-    }}>
-      {specialBadge && <div style={{ position: 'absolute', top: '5px', right: '5px', fontSize: '10px' }}>{specialBadge}</div>}
-      
-      <h4>{name} <small style={{color: '#777'}}>(ID: {typeof id === 'string' ? id.substring(0,4) : 'N/A'})</small></h4>
-      
+    <div className="fish-card-wrapper" style={{ borderColor: borderColorVar }}>
+      { (rarity === 'Епічна' || rarity === 'Легендарна') && (
+        <div className="special-badge" style={specialBadgeStyle}>
+          {rarity === 'Епічна' ? 'Епік!' : 'Легенда!'}
+        </div>
+      )}
+      <h4>{name} <small>(ID: {typeof id === 'string' ? id.substring(0,4) : 'N/A'})</small></h4>
       <p>Розмір: {size}</p>
       <p>Рідкісність: {rarityText}</p>
-      
-      {imageUrl && <img src={imageUrl} alt={name} style={{ width: '80px', height: 'auto', marginTop: '5px', borderRadius: '4px' }} />}
-      {!imageUrl && <p style={{fontSize: '10px', color: 'grey', margin: '10px 0'}}>(немає зображення)</p>}
-
-      {notes && <p style={{ fontSize: '12px', fontStyle: 'italic', marginTop: 'auto', color: '#555' }}>Примітка: {notes}</p>}
+      {imageUrl ? (
+        <img className="fish-image" src={imageUrl} alt={name} />
+      ) : (
+        <p className="no-image-text">(немає зображення)</p>
+      )}
+      {notes && <p className="fish-notes">Примітка: {notes}</p>}
     </div>
   );
 }

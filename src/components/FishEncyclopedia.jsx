@@ -1,4 +1,5 @@
 import React from 'react';
+import './FishEncyclopedia.css';
 
 const fishSpecies = [
   {
@@ -35,29 +36,24 @@ function FishEncyclopedia() {
   console.log('FishEncyclopedia component has been loaded!');
 
   return (
-    <div style={{
-      border: '2px solid #FF8C00',
-      padding: '20px',
-      margin: '20px 0',
-      backgroundColor: '#FFF8DC',
-      borderRadius: '8px'
-    }}>
-      <h2 style={{ textAlign: 'center', color: '#D2691E', marginBottom: '20px' }}>📖 Енциклопедія Риб 📖</h2>
+    <div className="encyclopedia-wrapper">
+      <h2 className="encyclopedia-title">📖 Енциклопедія Риб 📖</h2>
       {fishSpecies.map(fish => (
-        <div key={fish.name} style={{
-          marginBottom: '25px',
-          paddingBottom: '15px',
-          borderBottom: '1px dashed #D2B48C'
-        }}>
-          <h3 style={{ color: '#8B4513' }}>{fish.name}</h3>
-          {fish.imageUrl && <img src={fish.imageUrl} alt={fish.name} style={{ float: 'right', marginLeft: '15px', borderRadius: '4px', border: '1px solid #ccc' }} />}
+        <div key={fish.name} className="fish-species-item">
+          <h3>{fish.name}</h3>
+          {fish.imageUrl && (
+            <img 
+              src={fish.imageUrl} 
+              alt={fish.name} 
+              className="fish-image-encyclopedia" 
+            />
+          )}
           <p><strong>Опис:</strong> {fish.description}</p>
           <p><strong>Середовище:</strong> {fish.habitat}</p>
           <p><strong>Цікавий факт:</strong> {fish.funFact}</p>
-          <div style={{clear: 'both'}}></div>
         </div>
       ))}
-      {fishSpecies.length === 0 && <p>Інформація про риб наразі недоступна.</p>}
+      {fishSpecies.length === 0 && <p className="no-fish-info">Інформація про риб наразі недоступна.</p>}
     </div>
   );
 }

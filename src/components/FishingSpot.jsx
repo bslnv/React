@@ -1,6 +1,7 @@
 import React, { useState, useCallback, useEffect, Suspense, lazy } from 'react';
 import FishingLog from './FishingLog';
 import { useLocalStorage } from '../hooks/useLocalStorage';
+import './FishingSpot.css';
 
 const FishEncyclopedia = lazy(() => import('./FishEncyclopedia'));
 
@@ -89,31 +90,35 @@ function FishingSpot({ spotName, environmentDescription, maxLogCapacity = 5, ini
   };
 
   return (
-    <div style={{ border: '2px dashed #2196F3', padding: '20px', margin: '20px auto', borderRadius: '8px', maxWidth: '700px', backgroundColor: '#e3f2fd' }}>
+    <div className="fishing-spot-wrapper">
       <h2>Ласкаво просимо до: {spotName}</h2>
       <p><em>{environmentDescription}</em></p>
-      <p style={{fontWeight: 'bold'}}>Статус: <span style={{color: isFull ? 'red' : 'green'}}>{statusMessage}</span></p>
+      <p className="status-text">
+        Статус: <span className={isFull ? 'status-value-full' : 'status-value-ready'}>{statusMessage}</span>
+      </p>
 
       {isFull && caughtFishLog.length > 0 && (
-        <p style={{ color: 'darkred', backgroundColor: 'pink', padding: '5px', borderRadius: '3px' }}>
+        <p className="log-full-warning">
           <strong>Увага:</strong> Журнал заповнено! Більше риби не поміститься. Очистіть місце.
         </p>
       )}
-
-      <button
-        onClick={handleCatchFish}
-        disabled={isFull}
-        style={{ padding: '10px 15px', marginRight: '10px', backgroundColor: '#4CAF50', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer', opacity: isFull ? 0.5 : 1 }}
-      >
-        Закинути вудку! 🎣
-      </button>
-      <button
-        onClick={handleClearAllFish}
-        disabled={caughtFishLog.length === 0}
-        style={{ padding: '10px 15px', backgroundColor: '#f44336', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }}
-      >
-        Випустити весь улов 🗑️
-      </button>
+      
+      <div className="action-buttons" style={{ marginBottom: '20px' }}>
+        <button
+          onClick={handleCatchFish}
+          disabled={isFull}
+          className="btn-cast"
+        >
+          Закинути вудку! 🎣
+        </button>
+        <button
+          onClick={handleClearAllFish}
+          disabled={caughtFishLog.length === 0}
+          className="btn-clear-all"
+        >
+          Випустити весь улов 🗑️
+        </button>
+      </div>
 
       <FishingLog
         title={`Улов з "${spotName}" (макс: ${maxLogCapacity})`}
@@ -122,12 +127,15 @@ function FishingSpot({ spotName, environmentDescription, maxLogCapacity = 5, ini
       />
       <p>Заповненість журналу: {caughtFishLog.length} / {maxLogCapacity}</p>
 
-      <button onClick={toggleEncyclopedia} style={{ marginTop: '15px', padding: '8px 12px', backgroundColor: '#007bff', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }}>
+      <button 
+        onClick={toggleEncyclopedia} 
+        className="btn-toggle-encyclopedia"
+      >
         {showEncyclopedia ? 'Сховати' : 'Показати'} Енциклопедію Риб
       </button>
 
       {showEncyclopedia && (
-        <Suspense fallback={<div style={{marginTop: '10px', color: 'orange', fontWeight: 'bold'}}>Завантаження енциклопедії...</div>}>
+        <Suspense fallback={<div className="encyclopedia-fallback">Завантаження енциклопедії...</div>}>
           <FishEncyclopedia />
         </Suspense>
       )}
